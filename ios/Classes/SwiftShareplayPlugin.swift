@@ -7,8 +7,13 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin {
     let instance = SwiftShareplayPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
-
+  
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result("iOS " + UIDevice.current.systemVersion)
+    switch (call.method) {
+    case "isSharePlayAvailable":
+      result(true)
+    default:
+      break
+    }
   }
 }
