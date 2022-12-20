@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="flutter ios 15 shareplay logo" src="https://raw.githubusercontent.com/istornz/flutter_shareplay/main/.github/logo.jpg" />
+  <img alt="flutter ios 15 shareplay logo" src="https://github.com/istornz/flutter_shareplay/blob/main/.github/logo.jpg?raw=true" />
 </div>
 <br />
 
@@ -40,7 +40,7 @@ Due to some **technical restriction**, it's not currently possible to only use F
 - Open the Xcode workspace project ```ios/Runner.xcworkspace```.
 - Enable "Group Activities" capabilities on the main ```Runner``` app.
   
-<img alt="enable group activities capabilities xcode" src="https://raw.githubusercontent.com/istornz/share_play/main/.github/images/tutorial/group_activities_capability.gif" width="700px" />
+<img alt="enable group activities capabilities xcode" src="https://github.com/istornz/flutter_shareplay/blob/main/.github/tutorial/group_activities_capability.gif?raw=true" width="700px" />
 
 - Import ```share_play``` & create an instance of the Plugin
 
