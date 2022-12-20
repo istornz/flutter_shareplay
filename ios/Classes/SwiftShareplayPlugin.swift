@@ -6,6 +6,7 @@ import Combine
 @available(iOS 15, *)
 public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
   private var messageSink: FlutterEventSink?
+  private var newSessionSink: FlutterEventSink?
   
   var session: GroupSession<SharePlayActivity>?
   var messenger: GroupSessionMessenger?
@@ -13,20 +14,35 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "shareplay", binaryMessenger: registrar.messenger())
     let dataChannel = FlutterEventChannel(name: "shareplay/data", binaryMessenger: registrar.messenger())
+    let newSessionChannel = FlutterEventChannel(name: "shareplay/new_session", binaryMessenger: registrar.messenger())
     
     let instance = SwiftShareplayPlugin()
     
     dataChannel.setStreamHandler(instance)
+    newSessionChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
   
   public func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink) -> FlutterError? {
-    messageSink = events
+    if arguments as? String == "dataStream" {
+      messageSink = events
+    }
+    
+    if arguments as? String == "newSessionStream" {
+      newSessionSink = events
+    }
+    
     return nil
   }
   
   public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-    messageSink = nil
+    if arguments as? String == "dataStream" {
+      messageSink = nil
+    }
+    
+    if arguments as? String == "newSessionStream" {
+      newSessionSink = nil
+    }
     return nil
   }
   
@@ -51,8 +67,11 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
       } else {
         result(FlutterError(code: "SESSION_NOT_SET", message: "no session are set, check if you are joined the activity!", details: nil))
       }
+    case "currentSession":
+      result(currentSession())
     case "join":
-      join(result: result)
+      join()
+      result(nil)
     case "sessionState":
       sessionState(result: result)
     case "leave":
@@ -86,16 +105,6 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
   }
   
   @available(iOS 15, *)
-  func join(result: @escaping FlutterResult) {
-    Task {
-      for await session in SharePlayActivity.sessions() {
-        self.configureGroupSession(session)
-      }
-    }
-    result(nil)
-  }
-  
-  @available(iOS 15, *)
   func sessionState(result: @escaping FlutterResult) {
     switch(self.session?.state) {
     case .joined:
@@ -114,6 +123,7 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     result(nil)
   }
   
+  
   @available(iOS 15, *)
   func end(result: @escaping FlutterResult) {
     session?.end()
@@ -128,10 +138,26 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     )
     
     Task {
-      let resultData = try await activity.activate()
-      join(result: result)
-      result(resultData)
+      do {
+        let resultData = try await activity.activate()
+        result(resultData)
+      } catch {
+        result(FlutterError(code: "ACTIVATION_FAIL", message: "impossible start activity", details: error.localizedDescription))
+      }
     }
+  }
+  
+  func join() {
+    Task {[weak self] in
+      for await session in SharePlayActivity.sessions() {
+        self?.configureGroupSession(session)
+                }
+            }
+//    Task {
+//      for await session in SharePlayActivity.sessions() {
+//        self.configureGroupSession(session)
+//      }
+//    }
   }
   
   
@@ -140,6 +166,8 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     
     let messenger = GroupSessionMessenger(session: session)
     self.messenger = messenger
+    
+    self.newSessionSink?.self(currentSession())
     
     Task.detached { [weak self] in
       for await (message, data) in messenger.messages(of: String.self) {
@@ -155,5 +183,16 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     }
     
     session.join()
+  }
+  
+  func currentSession() -> Dictionary<String, Any>? {
+    if (self.session == nil) {
+      return nil
+    }
+    
+    var spSession: Dictionary<String, Any> = Dictionary()
+    spSession["id"] = self.session?.id.uuidString
+    spSession["title"] = self.session?.activity.title
+    return spSession
   }
 }

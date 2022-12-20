@@ -35,10 +35,22 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    _shareplayPlugin.join();
+    _init();
+
     _shareplayPlugin.dataStream().listen((data) {
       showMessageDialog(data);
     });
+
+    _shareplayPlugin.newSessionStream().listen((data) {
+      print('New session: ${data.id}, ${data.title}');
+    });
+  }
+
+  _init() async {
+    final currentSession = await _shareplayPlugin.currentSession();
+    if (currentSession != null) {
+      _shareplayPlugin.join();
+    }
   }
 
   @override
@@ -88,7 +100,7 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () async {
               final participant = await _shareplayPlugin.localParticipant();
-              print(participant.id);
+              print(participant?.id);
             },
             child: const Text('Local participant'),
           ),

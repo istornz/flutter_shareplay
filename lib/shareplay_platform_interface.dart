@@ -1,6 +1,7 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:shareplay/models/data_model.dart';
 import 'package:shareplay/models/participant_model.dart';
+import 'package:shareplay/models/session_model.dart';
 import 'package:shareplay/models/session_state_enum.dart';
 
 import 'shareplay_method_channel.dart';
@@ -46,7 +47,7 @@ abstract class ShareplayPlatform extends PlatformInterface {
     throw UnimplementedError('send() has not been implemented.');
   }
 
-  Future<SPParticipant> localParticipant() {
+  Future<SPParticipant?> localParticipant() {
     throw UnimplementedError('localParticipant() has not been implemented.');
   }
 
@@ -54,7 +55,15 @@ abstract class ShareplayPlatform extends PlatformInterface {
     throw UnimplementedError('sessionState() has not been implemented.');
   }
 
+  Future<SPSession?> currentSession() {
+    throw UnimplementedError('currentSession() has not been implemented.');
+  }
+
   Stream<SPDataModel> dataStream() {
     throw UnimplementedError('dataStream() has not been implemented.');
+  }
+
+  Stream<SPSession> newSessionStream() {
+    throw UnimplementedError('newSessionStream() has not been implemented.');
   }
 }

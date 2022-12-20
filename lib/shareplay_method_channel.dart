@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:shareplay/models/data_model.dart';
 import 'package:shareplay/models/participant_model.dart';
+import 'package:shareplay/models/session_model.dart';
 import 'package:shareplay/models/session_state_enum.dart';
 
 import 'shareplay_platform_interface.dart';
@@ -14,6 +15,10 @@ class MethodChannelShareplay extends ShareplayPlatform {
 
   @visibleForTesting
   final EventChannel dataChannel = const EventChannel('shareplay/data');
+
+  @visibleForTesting
+  final EventChannel newSessionChannel =
+      const EventChannel('shareplay/new_session');
 
   @override
   Future<bool> start({required String title}) async {
@@ -39,11 +44,13 @@ class MethodChannelShareplay extends ShareplayPlatform {
   }
 
   @override
-  Future<SPParticipant> localParticipant() {
+  Future<SPParticipant?> localParticipant() {
     return methodChannel.invokeMethod('localParticipant').then(
-          (value) => SPParticipant.fromMap(
-            Map<String, dynamic>.from(value),
-          ),
+          (value) => value != null
+              ? SPParticipant.fromMap(
+                  Map<String, dynamic>.from(value),
+                )
+              : null,
         );
   }
 
@@ -52,6 +59,17 @@ class MethodChannelShareplay extends ShareplayPlatform {
     return methodChannel.invokeMethod('send', {
       'data': data,
     });
+  }
+
+  @override
+  Future<SPSession?> currentSession() {
+    return methodChannel.invokeMethod('currentSession').then(
+          (value) => value != null
+              ? SPSession.fromMap(
+                  Map<String, dynamic>.from(value),
+                )
+              : null,
+        );
   }
 
   @override
@@ -66,6 +84,15 @@ class MethodChannelShareplay extends ShareplayPlatform {
     return dataChannel.receiveBroadcastStream('dataStream').map(
           (event) => SPDataModel.fromMap(
             Map<String, dynamic>.from(event),
+          ),
+        );
+  }
+
+  @override
+  Stream<SPSession> newSessionStream() {
+    return newSessionChannel.receiveBroadcastStream('newSessionStream').map(
+          (value) => SPSession.fromMap(
+            Map<String, dynamic>.from(value),
           ),
         );
   }

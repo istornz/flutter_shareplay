@@ -1,7 +1,10 @@
 import 'package:shareplay/models/participant_model.dart';
 
 class SPDataModel {
+  /// The participant that sent the message.
   final SPParticipant participant;
+
+  /// The message sent by the participant.
   final String message;
 
   SPDataModel({

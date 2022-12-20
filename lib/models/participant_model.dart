@@ -1,4 +1,5 @@
 class SPParticipant {
+  /// A globally unique identifier for the session participant.
   final String id;
 
   SPParticipant({
