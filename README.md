@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="flutter ios 15 shareplay logo" src="https://raw.githubusercontent.com/istornz/flutter_shareplay/main/.github/images/logo.jpg" />
+  <img alt="flutter ios 15 shareplay logo" src="https://raw.githubusercontent.com/istornz/flutter_shareplay/main/.github/logo.jpg" />
 </div>
 <br />
 
