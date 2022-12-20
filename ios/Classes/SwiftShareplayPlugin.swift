@@ -108,11 +108,11 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
   func sessionState(result: @escaping FlutterResult) {
     switch(self.session?.state) {
     case .joined:
-        result("joined")
+      result("joined")
     case .waiting:
-        result("joined")
+      result("joined")
     default:
-        result("invalidated")
+      result("invalidated")
     }
   }
   
@@ -151,13 +151,8 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     Task {[weak self] in
       for await session in SharePlayActivity.sessions() {
         self?.configureGroupSession(session)
-                }
-            }
-//    Task {
-//      for await session in SharePlayActivity.sessions() {
-//        self.configureGroupSession(session)
-//      }
-//    }
+      }
+    }
   }
   
   
