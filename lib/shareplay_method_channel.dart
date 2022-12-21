@@ -20,6 +20,14 @@ class MethodChannelShareplay extends ShareplayPlatform {
   final EventChannel newSessionChannel =
       const EventChannel('shareplay/new_session');
 
+  @visibleForTesting
+  final EventChannel participantsChannel =
+      const EventChannel('shareplay/participants');
+  
+  @visibleForTesting
+  final EventChannel sessionStateChannel =
+      const EventChannel('shareplay/session_state');
+
   @override
   Future<bool> start({required String title}) async {
     final result = await methodChannel.invokeMethod<bool>('start', {
@@ -73,8 +81,10 @@ class MethodChannelShareplay extends ShareplayPlatform {
   }
 
   @override
-  Future<SPSessionState> sessionState() {
-    return methodChannel.invokeMethod<String>('sessionState').then(
+  Stream<SPSessionState> sessionStateStream() {
+    return sessionStateChannel
+        .receiveBroadcastStream('sessionStateStream')
+        .map(
           (value) => SPSessionState.values.byName(value ?? 'invalidated'),
         );
   }
@@ -95,5 +105,18 @@ class MethodChannelShareplay extends ShareplayPlatform {
             Map<String, dynamic>.from(value),
           ),
         );
+  }
+
+  @override
+  Stream<List<SPParticipant>> participantsStream() {
+    return participantsChannel
+        .receiveBroadcastStream('participantsStream')
+        .map((value) {
+      return List<dynamic>.from(value)
+          .map(
+            (e) => SPParticipant.fromMap(Map<String, dynamic>.from(e),),
+          )
+          .toList();
+    });
   }
 }

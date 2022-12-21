@@ -7,19 +7,26 @@ import Combine
 public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
   private var messageSink: FlutterEventSink?
   private var newSessionSink: FlutterEventSink?
+  private var participantsSink: FlutterEventSink?
+  private var sessionStateSink: FlutterEventSink?
   
   var session: GroupSession<SharePlayActivity>?
   var messenger: GroupSessionMessenger?
+  var subscriptions = Set<AnyCancellable>()
   
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "shareplay", binaryMessenger: registrar.messenger())
     let dataChannel = FlutterEventChannel(name: "shareplay/data", binaryMessenger: registrar.messenger())
     let newSessionChannel = FlutterEventChannel(name: "shareplay/new_session", binaryMessenger: registrar.messenger())
+    let sessionStateChannel = FlutterEventChannel(name: "shareplay/session_state", binaryMessenger: registrar.messenger())
+    let participantsChannel = FlutterEventChannel(name: "shareplay/participants", binaryMessenger: registrar.messenger())
     
     let instance = SwiftShareplayPlugin()
     
     dataChannel.setStreamHandler(instance)
     newSessionChannel.setStreamHandler(instance)
+    sessionStateChannel.setStreamHandler(instance)
+    participantsChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
   
@@ -30,6 +37,14 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     
     if arguments as? String == "newSessionStream" {
       newSessionSink = events
+    }
+    
+    if arguments as? String == "participantsStream" {
+      participantsSink = events
+    }
+    
+    if arguments as? String == "sessionStateStream" {
+      sessionStateSink = events
     }
     
     return nil
@@ -43,6 +58,15 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     if arguments as? String == "newSessionStream" {
       newSessionSink = nil
     }
+    
+    if arguments as? String == "participantsStream" {
+      participantsSink = nil
+    }
+    
+    if arguments as? String == "sessionStateStream" {
+      sessionStateSink = nil
+    }
+    
     return nil
   }
   
@@ -72,8 +96,6 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     case "join":
       join()
       result(nil)
-    case "sessionState":
-      sessionState(result: result)
     case "leave":
       leave(result: result)
     case "send":
@@ -101,18 +123,6 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
           result(FlutterError(code: "SENDING_FAIL", message: "impossible to send message", details: error.localizedDescription))
         }
       }
-    }
-  }
-  
-  @available(iOS 15, *)
-  func sessionState(result: @escaping FlutterResult) {
-    switch(self.session?.state) {
-    case .joined:
-      result("joined")
-    case .waiting:
-      result("joined")
-    default:
-      result("invalidated")
     }
   }
   
@@ -155,39 +165,78 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     }
   }
   
+  func updateSessionState() {
+    switch(self.session?.state) {
+    case .joined:
+      self.sessionStateSink?.self("joined")
+    case .waiting:
+      self.sessionStateSink?.self("joined")
+    default:
+      self.sessionStateSink?.self("invalidated")
+    }
+  }
   
   func configureGroupSession(_ session: GroupSession<SharePlayActivity>) {
     self.session = session
     
-    let messenger = GroupSessionMessenger(session: session)
-    self.messenger = messenger
-    
-    self.newSessionSink?.self(currentSession())
-    
-    Task.detached { [weak self] in
-      for await (message, data) in messenger.messages(of: String.self) {
-        var spParticipant: Dictionary<String, Any> = Dictionary()
-        spParticipant["id"] = data.source.id.uuidString
-        
-        var spResult: Dictionary<String, Any> = Dictionary()
-        spResult["message"] = message;
-        spResult["participant"] = spParticipant;
-        
-        self?.messageSink?.self(spResult)
-      }
+    self.updateSessionState()
+  
+  // Attach a sink to know when an activity is joined
+  self.session?.$activeParticipants.sink(receiveCompletion: {_ in
+    self.participantsSink?.self(self.activeParticipants(participants: self.session!.activeParticipants))
+  }, receiveValue: {result in
+    self.participantsSink?.self(self.activeParticipants(participants: result))
+  })
+  .store(in: &subscriptions)
+  
+  let messenger = GroupSessionMessenger(session: session)
+  self.messenger = messenger
+  
+  self.newSessionSink?.self(currentSession())
+  
+  Task.detached { [weak self] in
+    for await (message, data) in messenger.messages(of: String.self) {
+      var spParticipant: Dictionary<String, Any> = Dictionary()
+      spParticipant["id"] = data.source.id.uuidString
+      
+      var spResult: Dictionary<String, Any> = Dictionary()
+      spResult["message"] = message;
+      spResult["participant"] = spParticipant;
+      
+      self?.messageSink?.self(spResult)
     }
-    
-    session.join()
   }
   
-  func currentSession() -> Dictionary<String, Any>? {
-    if (self.session == nil) {
-      return nil
-    }
-    
-    var spSession: Dictionary<String, Any> = Dictionary()
-    spSession["id"] = self.session?.id.uuidString
-    spSession["title"] = self.session?.activity.title
-    return spSession
+  session.join()
+}
+
+func activeParticipants(participants: Set<Participant>) -> [Dictionary<String, Any>] {
+  var spActiveParticipants: [Dictionary<String, Any>] = []
+  
+  if (self.session == nil) {
+    return spActiveParticipants
   }
+  
+  
+  for participant in participants {
+    var spParticipant: Dictionary<String, Any> = Dictionary()
+    spParticipant["id"] = participant.id.uuidString
+    
+    spActiveParticipants.append(spParticipant)
+  }
+  
+  return spActiveParticipants
+}
+
+
+func currentSession() -> Dictionary<String, Any>? {
+  if (self.session == nil) {
+    return nil
+  }
+  
+  var spSession: Dictionary<String, Any> = Dictionary()
+  spSession["id"] = self.session?.id.uuidString
+  spSession["title"] = self.session?.activity.title
+  return spSession
+}
 }

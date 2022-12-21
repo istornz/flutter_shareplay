@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shareplay/models/session_state_enum.dart';
 import 'package:shareplay/shareplay_method_channel.dart';
 
 void main() {
@@ -63,9 +62,5 @@ void main() {
 
   test('send', () async {
     expect(await platform.send('A message'), null);
-  });
-
-  test('sessionState', () async {
-    expect(await platform.sessionState(), SPSessionState.joined);
   });
 }

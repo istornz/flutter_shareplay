@@ -54,11 +54,6 @@ class Shareplay {
     return ShareplayPlatform.instance.currentSession();
   }
 
-  /// The current session state.
-  Future<SPSessionState> sessionState() {
-    return ShareplayPlatform.instance.sessionState();
-  }
-
   /// The stream of messages received from other participants.
   Stream<SPDataModel> dataStream() {
     return ShareplayPlatform.instance.dataStream();
@@ -67,5 +62,23 @@ class Shareplay {
   /// A stream when a new session was created.
   Stream<SPSession> newSessionStream() {
     return ShareplayPlatform.instance.newSessionStream();
+  }
+
+  /// A stream of all active participants in the current session.
+  /// 
+  /// This property reflects the set of people invited to a group session and currently engaged in the shared activity on their device.
+  /// 
+  /// Members who share in the conversation over FaceTime but don’t join the shared activity aren’t active participants.
+  /// 
+  /// It will update when a new participant join or leave the session.
+  Stream<List<SPParticipant>> participantsStream() {
+    return ShareplayPlatform.instance.participantsStream();
+  }
+
+  /// A stream of the current session state.
+  /// 
+  /// Use this property to get the current state value, or configure a subscriber to detect changes to the value.
+  Stream<SPSessionState> sessionStateStream() {
+    return ShareplayPlatform.instance.sessionStateStream();
   }
 }

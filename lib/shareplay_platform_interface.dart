@@ -51,8 +51,8 @@ abstract class ShareplayPlatform extends PlatformInterface {
     throw UnimplementedError('localParticipant() has not been implemented.');
   }
 
-  Future<SPSessionState> sessionState() {
-    throw UnimplementedError('sessionState() has not been implemented.');
+  Stream<SPSessionState> sessionStateStream() {
+    throw UnimplementedError('sessionStateStream() has not been implemented.');
   }
 
   Future<SPSession?> currentSession() {
@@ -65,5 +65,9 @@ abstract class ShareplayPlatform extends PlatformInterface {
 
   Stream<SPSession> newSessionStream() {
     throw UnimplementedError('newSessionStream() has not been implemented.');
+  }
+
+  Stream<List<SPParticipant>> participantsStream() {
+    throw UnimplementedError('participantsStream() has not been implemented.');
   }
 }

@@ -51,12 +51,21 @@ class MockShareplayPlatform
   Future send(String data) => Future.value();
 
   @override
-  Future<SPSessionState> sessionState() {
-    return Future.value(SPSessionState.joined);
+  Stream<SPSessionState> sessionStateStream() {
+    return Stream.value(SPSessionState.joined);
   }
 
   @override
   Future<bool> start({required String title}) => Future.value(true);
+  
+  @override
+  Stream<List<SPParticipant>> participantsStream() {
+    return Stream.value([
+      SPParticipant(id: '1234'),
+      SPParticipant(id: '12345'),
+      SPParticipant(id: '123456'),
+    ]);
+  }
 }
 
 void main() {
@@ -113,7 +122,16 @@ void main() {
     expect(sessionModel.title, 'test');
   });
 
-  test('sessionState', () async {
-    expect(await shareplayPlugin.sessionState(), SPSessionState.joined);
+  test('sessionStateStream', () async {
+    final sessionState = await shareplayPlugin.sessionStateStream().first;
+    expect(sessionState, SPSessionState.joined);
+  });
+
+  test('participantsStream', () async {
+    final participants = await shareplayPlugin.participantsStream().first;
+    expect(participants.length, 3);
+    expect(participants.first.id, '1234');
+    expect(participants[1].id, '12345');
+    expect(participants.last.id, '123456');
   });
 }
