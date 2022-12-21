@@ -17,44 +17,48 @@ A Flutter plugin to use iOS 15.0+ real-time connection **SharePlay** on a FaceTi
 
 ## 🧐 What is it ?
 
-This plugin use [iOS GroupActivities API](https://developer.apple.com/documentation/GroupActivities/).
+This plugin use official [iOS GroupActivities API](https://developer.apple.com/documentation/GroupActivities/).
 
-**share_play** can be used to communicate data between devices in your Flutter apps using iOS SharePlay feature.
+**share_play** can be used to communicate data over devices in a Flutter apps using iOS SharePlay features.
 
 Why using iOS SharePlay?
-- ⚡️ It's fast.
-- 🍀 Reliable (using Apple server).
-- 💰 It's "free" (including in your paid Apple Developer subscription).
-- 😌 Very easy to implement (in 3 lines of code you can share data!).
-- 🙌 Works accros iOS, macOS & tvOS.
+- ⚡️ It's **fast**.
+- 🍀 **Reliable** (using Apple server).
+- 💰 It's "**free**" (including in your paid Apple Developer subscription).
+- 😌 Very **easy** to implement (in 3 lines of code you can share data!).
+- 🙌 Works accros **iOS**, **macOS** & **tvOS**.
 
 > ⚠️ **share_play** is only intended to use with **iOS 15.0+**!
 > It will simply do nothing on other platform & < iOS 15.0
 
-## 👻 Getting started
+<br />
+<div align="center" style="display: flex;align-items: center;justify-content: center;">
+  <img alt="flutter ios 15 shareplay group activities preview" src="https://github.com/istornz/flutter_shareplay/blob/main/.github/demo.gif?raw=true" width="800px" />
+</div>
+<br />
 
-Due to some **technical restriction**, it's not currently possible to only use Flutter 🫣.
+## 👻 Getting started
 
 > ℹ️ You can check into the [**example repository**](https://github.com/istornz/share_play/tree/main/example) for a full example.
 
 - Open the Xcode workspace project ```ios/Runner.xcworkspace```.
-- Enable "Group Activities" capabilities on the main ```Runner``` app.
+- Enable "**Group Activities**" capabilities on the main ```Runner``` app.
   
 <img alt="enable group activities capabilities xcode" src="https://github.com/istornz/flutter_shareplay/blob/main/.github/tutorial/group_activities_capability.gif?raw=true" width="700px" />
 
-- Import ```share_play``` & create an instance of the Plugin
+- Import ```share_play``` & create an instance of the Plugin.
 
 ```dart
 import 'package:shareplay/shareplay.dart';
 
 // [...]
 
-final _shareplayPlugin = Shareplay();
+final _shareplayPlugin = SharePlay();
 ```
 
 ## ℹ️ Quick start
 
-- Add listener when a new message is received in ```initState()``` method for ex.
+- Add listener when a new message is received (in ```initState()``` method for *ex*).
 
 ```dart
 @override
@@ -64,18 +68,21 @@ void initState() {
   // [...]
 
   _shareplayPlugin.dataStream().listen((data) {
+    // do what you want here :)
     print(data);
   });
 }
 ```
 
-- Start a new activity.
+- Start a new activity 🏁.
 
 ```dart
 _shareplayPlugin.start(title: 'My Activity');
 ```
 
-- Join an activity from other device.
+- Join activity from another device 📲.
+
+> ℹ️ By tapping on the ```SharePlay``` banner on top of the screen, you don't need to call ```join()``` method!
 
 ```dart
 _shareplayPlugin.join();
@@ -94,16 +101,16 @@ _shareplayPlugin.send('Hello from Flutter');
 | Name | Description | Returned value |
 | ---- | ----------- | -------- |
 | ```.start()``` | Create an activity when a FaceTime call is active  | ```Future<bool>``` State of the new activity is created or not |
-| ```.join()``` | Starts the shared activity on the current device  | ```Future``` When a new activity was joined |
+| ```.join()``` | Starts the shared activity on the current device, not necessary if user tap on the ```SharePlay``` banner  | ```Future``` When a new activity was joined |
 | ```.localParticipant()``` | Use this property to differentiate the participant on the current device from participants on other devices  | ```Future<SPParticipant?>``` The participant on the current device including participant id |
 | ```.end()``` | Ends the activity for the entire group  | ```Future``` When the activity was stopped |
 | ```.leave()``` | Leaves the current activity  | ```Future``` When the activity was leaved |
 | ```.send()``` | Send a message to all other participants  | ```Future``` When the message was sent |
 | ```.currentSession()``` | Get the current session on the device  | ```Future<SPSession?>``` Current session including session id & activity title |
-| ```.sessionState()``` | Get the current session state on the device  | ```Future<SPSessionState?>``` Session state (```SPSessionState.waiting```, ```SPSessionState.joined``` or ```SPSessionState.invalidated```) |
 | ```.dataStream()``` | The stream of messages received from other participants  | ```Stream<SPDataModel>``` Source participant & message data |
 | ```.newSessionStream()``` | A stream of all created sessions  | ```Stream<SPSession>``` Created session including session id & activity title |
-
+| ```.participantsStream()``` | A stream of all active participants in the current session  | ```Stream<List<SPParticipant>>``` All active participants in the activity |
+| ```.sessionStateStream()``` | A stream of the current session state.  | ```Stream<SPSessionState>``` Session state (```SPSessionState.waiting```, ```SPSessionState.joined``` or ```SPSessionState.invalidated```)  |
 <br />
 
 ## 👥 Contributions

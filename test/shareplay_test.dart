@@ -71,7 +71,7 @@ class MockShareplayPlatform
 void main() {
   final ShareplayPlatform initialPlatform = ShareplayPlatform.instance;
 
-  Shareplay shareplayPlugin = Shareplay();
+  SharePlay shareplayPlugin = SharePlay();
   MockShareplayPlatform fakePlatform = MockShareplayPlatform();
   ShareplayPlatform.instance = fakePlatform;
 

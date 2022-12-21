@@ -5,7 +5,7 @@ import 'package:shareplay/models/session_state_enum.dart';
 
 import 'shareplay_platform_interface.dart';
 
-class Shareplay {
+class SharePlay {
   /// Create an activity when a FaceTime call is active.
   /// The system also invites other participants to join the activity.
   ///

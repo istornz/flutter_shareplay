@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   StreamSubscription<SPSessionState>? _sessionStateSubscription;
 
   // Create a SharePlay instance.
-  final _shareplayPlugin = Shareplay();
+  final _shareplayPlugin = SharePlay();
 
   // Game state
   SPSession? _session;
@@ -171,10 +171,6 @@ class _HomePageState extends State<HomePage> {
                               _endGameActivity();
                             },
                           ),
-                          // const SizedBox(height: 20),
-                          // Text('Session state: $_sessionState'),
-                          // Text('Session data: $_session'),
-                          // Text('Participants: $_participantCount'),
                         ],
                       ),
                     )
@@ -244,22 +240,6 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          // SafeArea(
-                          //   child: Column(
-                          //     children: [
-                          //       Text('Session state: $_sessionState'),
-                          //       Text('Session data: $_session'),
-                          //       Text('Participants: $_participantCount'),
-                          //       Text('Bubble top: $_bubbleTop'),
-                          //       TextButton(
-                          //         onPressed: () {
-                          //           _endGameActivity();
-                          //         },
-                          //         child: const Text('End'),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // )
                         ],
                       ),
                     ),
