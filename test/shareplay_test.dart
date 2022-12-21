@@ -57,7 +57,7 @@ class MockShareplayPlatform
 
   @override
   Future<bool> start({required String title}) => Future.value(true);
-  
+
   @override
   Stream<List<SPParticipant>> participantsStream() {
     return Stream.value([

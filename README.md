@@ -39,7 +39,7 @@ Why using iOS SharePlay?
 
 ## 👻 Getting started
 
-> ℹ️ You can check into the [**example repository**](https://github.com/istornz/share_play/tree/main/example) for a full example.
+> ℹ️ You can check into the [**example repository**](https://github.com/istornz/flutter_shareplay/tree/main/example) for a full example.
 
 - Open the Xcode workspace project ```ios/Runner.xcworkspace```.
 - Enable "**Group Activities**" capabilities on the main ```Runner``` app.
@@ -69,7 +69,6 @@ void initState() {
 
   _shareplayPlugin.dataStream().listen((data) {
     // do what you want here :)
-    print(data);
   });
 }
 ```
@@ -82,11 +81,11 @@ _shareplayPlugin.start(title: 'My Activity');
 
 - Join activity from another device 📲.
 
-> ℹ️ By tapping on the ```SharePlay``` banner on top of the screen, you don't need to call ```join()``` method!
-
 ```dart
 _shareplayPlugin.join();
 ```
+
+> ℹ️ By tapping on the ```SharePlay``` banner on top of the screen, you don't need to call ```join()``` method!
 
 - Send your first message.
 
