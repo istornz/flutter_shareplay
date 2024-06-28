@@ -1,6 +1,6 @@
 name: shareplay
 description: A Flutter plugin to use iOS real-time connection SharePlay on a FaceTime call.
-version: 1.0.1
+version: 1.0.2
 homepage: https://dimitridessus.fr
 repository: https://github.com/istornz/flutter_shareplay
 
@@ -17,12 +17,12 @@ screenshots:
 dependencies:
   flutter:
     sdk: flutter
-  plugin_platform_interface: ^2.0.2
+  plugin_platform_interface: ^2.1.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
