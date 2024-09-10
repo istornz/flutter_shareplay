@@ -1,6 +1,6 @@
 name: shareplay
 description: A Flutter plugin to use iOS real-time connection SharePlay on a FaceTime call.
-version: 1.0.2
+version: 1.0.3
 homepage: https://dimitridessus.fr
 repository: https://github.com/istornz/flutter_shareplay
 
@@ -10,9 +10,9 @@ environment:
 
 screenshots:
   - description: 'shareplay logo plugin.'
-    path: images/logo.jpg
+    path: images/logo.webp
   - description: 'This is a demo of a game running with shareplay Flutter plugin.'
-    path: images/demo.gif
+    path: images/demo.webp
 
 dependencies:
   flutter:

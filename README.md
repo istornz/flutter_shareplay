@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="flutter ios 15 shareplay logo" src="https://github.com/istornz/flutter_shareplay/blob/main/images/logo.jpg?raw=true" />
+  <img alt="flutter ios 15 shareplay logo" src="https://github.com/istornz/flutter_shareplay/blob/main/images/logo.webp?raw=true" />
 </div>
 <br />
 
@@ -14,7 +14,7 @@
 
 <div align="center">
   <a href="https://radion-app.com" target="_blank" alt="Radion - Ultimate gaming app">
-    <img src="https://raw.githubusercontent.com/istornz/flutter_shareplay/main/images/radion.png" width="600px" alt="Radion banner - Ultimate gaming app" />
+    <img src="https://raw.githubusercontent.com/istornz/flutter_shareplay/main/images/radion.webp" width="600px" alt="Radion banner - Ultimate gaming app" />
   </a>
 </div>
 
@@ -40,7 +40,7 @@ Why using iOS SharePlay?
 
 <br />
 <div align="center" style="display: flex;align-items: center;justify-content: center;">
-  <img alt="flutter ios 15 shareplay group activities preview" src="https://github.com/istornz/flutter_shareplay/blob/main/images/demo.gif?raw=true" width="800px" />
+  <img alt="flutter ios 15 shareplay group activities preview" src="https://github.com/istornz/flutter_shareplay/blob/main/images/demo.webp?raw=true" width="800px" />
 </div>
 <br />
 
@@ -51,7 +51,7 @@ Why using iOS SharePlay?
 - Open the Xcode workspace project ```ios/Runner.xcworkspace```.
 - Enable "**Group Activities**" capabilities on the main ```Runner``` app.
   
-<img alt="enable group activities capabilities xcode" src="https://github.com/istornz/flutter_shareplay/blob/main/images/tutorial/group_activities_capability.gif?raw=true" width="700px" />
+<img alt="enable group activities capabilities xcode" src="https://github.com/istornz/flutter_shareplay/blob/main/images/tutorial/group_activities_capability.webp?raw=true" width="700px" />
 
 - Import ```share_play``` & create an instance of the Plugin.
 
