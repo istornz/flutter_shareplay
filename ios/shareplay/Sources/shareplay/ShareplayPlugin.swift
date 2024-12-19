@@ -4,7 +4,7 @@ import GroupActivities
 import Combine
 
 @available(iOS 15, *)
-public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
+public class ShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler {
   private var messageSink: FlutterEventSink?
   private var newSessionSink: FlutterEventSink?
   private var participantsSink: FlutterEventSink?
@@ -21,7 +21,7 @@ public class SwiftShareplayPlugin: NSObject, FlutterPlugin, FlutterStreamHandler
     let sessionStateChannel = FlutterEventChannel(name: "shareplay/session_state", binaryMessenger: registrar.messenger())
     let participantsChannel = FlutterEventChannel(name: "shareplay/participants", binaryMessenger: registrar.messenger())
     
-    let instance = SwiftShareplayPlugin()
+    let instance = ShareplayPlugin()
     
     dataChannel.setStreamHandler(instance)
     newSessionChannel.setStreamHandler(instance)
