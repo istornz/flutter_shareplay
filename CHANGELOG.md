@@ -1,3 +1,8 @@
+## 1.1.0
+* 🏗️ Move to Swift Package Manager.
+* 🏗️ Regenerate example app.
+* ⬆️ Upgrade dependencies.
+
 ## 1.0.3
 
 * 🍱 Convert images to webp.
