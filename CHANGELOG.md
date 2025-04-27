@@ -1,3 +1,6 @@
+## 1.1.1
+* ⬆️ Upgrade dependencies.
+
 ## 1.1.0
 * 🏗️ Move to Swift Package Manager.
 * 🏗️ Regenerate example app.
